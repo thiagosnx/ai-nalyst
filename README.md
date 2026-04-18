@@ -13,9 +13,7 @@ Construído com LangGraph · dbt-DuckDB · Streamlit · GitHub Models (GPT-4o)
 
 <br/>
 
-<video src="demo.mp4" width="100%" controls autoplay muted loop>
-  <a href="demo.mp4">▶️ Assistir demonstração</a>
-</video>
+![Demonstração do AI-nalyst](demo.gif)
 
 </div>
 

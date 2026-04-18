@@ -11,6 +11,12 @@ Construído com LangGraph · dbt-DuckDB · Streamlit · GitHub Models (GPT-4o)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.43%2B-red?logo=streamlit)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
+<br/>
+
+<video src="demo.mp4" width="100%" controls autoplay muted loop>
+  <a href="demo.mp4">▶️ Assistir demonstração</a>
+</video>
+
 </div>
 
 ---

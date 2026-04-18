@@ -133,6 +133,11 @@ def generate_sql(state: AgentState, llm) -> dict:
     except json.JSONDecodeError as exc:
         return {"error": f"Resposta do LLM não é JSON válido: {exc}", "sql_query": ""}
     except Exception as exc:
+        err_str = str(exc)
+        # Propaga erros de rate limit — se chegou aqui, o fallback Gemini
+        # também falhou (ou não estava configurado). Deixa o app.py tratar.
+        if "RateLimitReached" in err_str or "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
+            raise
         return {"error": f"Erro ao chamar o LLM: {exc}", "sql_query": ""}
 
     if "error" in parsed:

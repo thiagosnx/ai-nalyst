@@ -26,12 +26,26 @@ if prompt := st.chat_input("Faça uma pergunta sobre os dados (ex: Quais estados
 
     with st.chat_message("assistant"):
         with st.spinner("Analisando sua pergunta..."):
-            graph = get_graph()
-            result = graph.invoke({
-                "question": prompt,
-                "retry_count": 0,
-                "error": None,
-            })
+            try:
+                graph = get_graph()
+                result = graph.invoke({
+                    "question": prompt,
+                    "retry_count": 0,
+                    "error": None,
+                })
+            except Exception as invoke_err:
+                err_msg = str(invoke_err)
+                # Detecta limite diário do GitHub Models
+                if "RateLimitReached" in err_msg or "429" in err_msg or "RESOURCE_EXHAUSTED" in err_msg:
+                    friendly = (
+                        "⏳ Limite diário de requisições atingido em todos os modelos configurados. "
+                        "Aguarde algumas horas e tente novamente."
+                    )
+                else:
+                    friendly = f"Erro interno ao processar sua pergunta: {err_msg}"
+                st.error(f"❌ {friendly}")
+                st.session_state.messages.append({"role": "assistant", "content": f"❌ {friendly}"})
+                st.stop()
 
         if result.get("error"):
             st.error(f"❌ {result['error']}")
@@ -40,7 +54,7 @@ if prompt := st.chat_input("Faça uma pergunta sobre os dados (ex: Quais estados
                 "content": f"❌ {result['error']}",
             })
         else:
-            df = result["dataframe"]
+            df = result.get("dataframe")
             cfg = result.get("chart_config", {})
             chart_type = result.get("chart_type", "table")
 

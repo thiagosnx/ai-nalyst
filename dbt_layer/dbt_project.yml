@@ -1,0 +1,15 @@
+name: bi_factory
+version: "1.0.0"
+profile: bi_factory
+
+model-paths: ["models"]
+test-paths: ["tests"]
+target-path: "target"
+clean-targets: ["target"]
+
+models:
+  bi_factory:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table

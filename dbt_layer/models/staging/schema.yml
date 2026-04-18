@@ -1,0 +1,124 @@
+version: 2
+
+models:
+  - name: stg_orders
+    description: "Staging de pedidos do e-commerce Olist. Um registro por pedido."
+    columns:
+      - name: order_id
+        description: "Identificador único do pedido."
+        tests: [not_null, unique]
+      - name: customer_id
+        description: "Referência ao cliente que realizou o pedido."
+        tests: [not_null]
+      - name: order_status
+        description: "Status atual do pedido (delivered, shipped, canceled, etc.)."
+        tests:
+          - accepted_values:
+              values: ["delivered", "shipped", "canceled", "unavailable", "invoiced", "processing", "created", "approved"]
+      - name: purchased_at
+        description: "Timestamp em que o pedido foi realizado pelo cliente."
+      - name: approved_at
+        description: "Timestamp em que o pagamento do pedido foi aprovado."
+      - name: delivered_carrier_at
+        description: "Timestamp em que o pedido foi entregue à transportadora."
+      - name: delivered_at
+        description: "Timestamp em que o pedido foi entregue ao cliente."
+      - name: estimated_delivery_at
+        description: "Data estimada de entrega informada ao cliente no momento da compra."
+
+  - name: stg_order_items
+    description: "Staging de itens de pedido. Um registro por item dentro de cada pedido."
+    columns:
+      - name: order_id
+        description: "Referência ao pedido pai."
+        tests: [not_null]
+      - name: order_item_id
+        description: "Número sequencial do item dentro do pedido (começa em 1)."
+        tests: [not_null]
+      - name: product_id
+        description: "Referência ao produto vendido."
+        tests: [not_null]
+      - name: seller_id
+        description: "Referência ao vendedor responsável pelo item."
+        tests: [not_null]
+      - name: shipping_limit_at
+        description: "Data limite para o vendedor fazer o despacho do produto."
+      - name: price
+        description: "Preço unitário do produto em reais (BRL), sem frete."
+      - name: freight_value
+        description: "Valor do frete do item em reais (BRL)."
+
+  - name: stg_products
+    description: "Staging de produtos cadastrados no marketplace Olist."
+    columns:
+      - name: product_id
+        description: "Identificador único do produto."
+        tests: [not_null, unique]
+      - name: product_category_name
+        description: "Categoria principal do produto em português."
+      - name: product_name_length
+        description: "Número de caracteres do nome do produto."
+      - name: product_description_length
+        description: "Número de caracteres da descrição do produto."
+      - name: product_photos_qty
+        description: "Quantidade de fotos publicadas do produto."
+      - name: product_weight_g
+        description: "Peso do produto em gramas."
+      - name: product_length_cm
+        description: "Comprimento do produto em centímetros."
+      - name: product_height_cm
+        description: "Altura do produto em centímetros."
+      - name: product_width_cm
+        description: "Largura do produto em centímetros."
+
+  - name: stg_customers
+    description: "Staging de clientes que realizaram ao menos um pedido na plataforma."
+    columns:
+      - name: customer_id
+        description: "Identificador único da conta do cliente por pedido (pode variar entre pedidos)."
+        tests: [not_null, unique]
+      - name: customer_unique_id
+        description: "Identificador único e estável do cliente, independente do pedido."
+        tests: [not_null]
+      - name: customer_zip_code_prefix
+        description: "Prefixo do CEP (5 dígitos) do endereço do cliente."
+      - name: customer_city
+        description: "Cidade do cliente."
+      - name: customer_state
+        description: "Estado (UF de 2 letras) do cliente."
+
+  - name: stg_sellers
+    description: "Staging de vendedores cadastrados no marketplace Olist."
+    columns:
+      - name: seller_id
+        description: "Identificador único do vendedor."
+        tests: [not_null, unique]
+      - name: seller_zip_code_prefix
+        description: "Prefixo do CEP (5 dígitos) do endereço do vendedor."
+      - name: seller_city
+        description: "Cidade do vendedor."
+      - name: seller_state
+        description: "Estado (UF de 2 letras) do vendedor."
+
+  - name: stg_reviews
+    description: "Staging de avaliações deixadas pelos clientes após o recebimento dos pedidos."
+    columns:
+      - name: review_id
+        description: "Identificador único da avaliação."
+        tests: [not_null]
+      - name: order_id
+        description: "Referência ao pedido avaliado."
+        tests: [not_null]
+      - name: review_score
+        description: "Nota da avaliação de 1 (pessimo) a 5 (excelente)."
+        tests:
+          - accepted_values:
+              values: [1, 2, 3, 4, 5]
+      - name: review_comment_title
+        description: "Título do comentário da avaliação (pode ser nulo)."
+      - name: review_comment_message
+        description: "Texto completo do comentário da avaliação (pode ser nulo)."
+      - name: review_created_at
+        description: "Timestamp em que a solicitação de avaliação foi enviada ao cliente."
+      - name: review_answered_at
+        description: "Timestamp em que o cliente submeteu a avaliação."

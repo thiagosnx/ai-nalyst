@@ -1,0 +1,86 @@
+version: 2
+
+models:
+  - name: fct_sales
+    description: "Tabela fato consolidada de vendas do e-commerce brasileiro. Une pedidos, itens, produtos e clientes."
+    columns:
+      - name: order_id
+        description: "Identificador único do pedido."
+        tests: [not_null]
+      - name: customer_id
+        description: "Identificador do cliente por pedido (varia entre pedidos do mesmo cliente)."
+        tests: [not_null]
+      - name: customer_unique_id
+        description: "Identificador estável e único do cliente, igual para todos os pedidos do mesmo comprador."
+      - name: customer_city
+        description: "Cidade do cliente que realizou o pedido."
+      - name: customer_state
+        description: "Estado (UF) do cliente que realizou o pedido."
+      - name: order_status
+        description: "Status atual do pedido (delivered, shipped, canceled, etc.)."
+      - name: purchased_at
+        description: "Timestamp em que o pedido foi realizado pelo cliente."
+      - name: approved_at
+        description: "Timestamp em que o pagamento foi aprovado."
+      - name: delivered_carrier_at
+        description: "Timestamp em que o pedido foi entregue à transportadora."
+      - name: delivered_at
+        description: "Timestamp em que o pedido chegou ao cliente."
+      - name: estimated_delivery_at
+        description: "Data estimada de entrega informada no momento da compra."
+      - name: order_item_id
+        description: "Número sequencial do item dentro do pedido."
+      - name: product_id
+        description: "Identificador único do produto vendido."
+      - name: product_category_name
+        description: "Categoria do produto em português (ex: cama_mesa_banho, esporte_lazer)."
+      - name: price
+        description: "Preço do item em reais (BRL), sem frete."
+      - name: freight_value
+        description: "Valor do frete do item em reais (BRL)."
+      - name: total_value
+        description: "Valor total do item incluindo frete, em reais (BRL)."
+      - name: seller_id
+        description: "Identificador do vendedor responsável por este item."
+      - name: purchased_month
+        description: "Mês de compra truncado (YYYY-MM-01), útil para agregações mensais."
+      - name: purchased_year
+        description: "Ano de compra truncado (YYYY-01-01), útil para agregações anuais."
+      - name: delivery_days
+        description: "Número de dias entre a compra e a entrega ao cliente."
+
+  - name: fct_reviews
+    description: "Tabela fato de avaliações dos clientes. Une reviews com pedidos e dados do cliente."
+    columns:
+      - name: review_id
+        description: "Identificador único da avaliação."
+        tests: [not_null]
+      - name: order_id
+        description: "Referência ao pedido avaliado."
+        tests: [not_null]
+      - name: review_score
+        description: "Nota da avaliação de 1 (pessimo) a 5 (excelente)."
+      - name: review_comment_title
+        description: "Título do comentário deixado pelo cliente (pode ser nulo)."
+      - name: review_comment_message
+        description: "Texto completo da avaliação deixada pelo cliente (pode ser nulo)."
+      - name: review_created_at
+        description: "Data em que a solicitação de avaliação foi enviada ao cliente."
+      - name: review_answered_at
+        description: "Timestamp em que o cliente submeteu a resposta da avaliação."
+      - name: customer_id
+        description: "Identificador do cliente que avaliou."
+      - name: customer_city
+        description: "Cidade do cliente que avaliou."
+      - name: customer_state
+        description: "Estado (UF) do cliente que avaliou."
+      - name: order_status
+        description: "Status do pedido avaliado."
+      - name: purchased_at
+        description: "Timestamp da compra do pedido avaliado."
+      - name: delivered_at
+        description: "Timestamp de entrega do pedido avaliado."
+      - name: days_to_review
+        description: "Número de dias entre a compra e o envio da solicitação de avaliação."
+      - name: delivery_days
+        description: "Número de dias entre a compra e a entrega ao cliente."
